@@ -151,11 +151,11 @@ def mix_datasets(dataset_mixer: dict, splits: Optional[List[str]] = None, shuffl
         fracs.append(frac)
         for split in splits:
             try:
-                # Try first if dataset on a Hub repo
-                dataset = load_dataset(ds, split=split)
-            except DatasetGenerationError:
-                # If not, check local dataset
+                # Try first local dataset
                 dataset = load_from_disk(os.path.join(ds, split))
+            except DatasetGenerationError:
+                dataset = load_dataset(ds, split=split)
+                # If not, check dataset on a Hub repo
 
             if "train" in split:
                 raw_train_datasets.append(dataset)
