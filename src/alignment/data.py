@@ -17,6 +17,7 @@ import os
 from typing import Any, List, Literal, Optional
 
 from datasets import DatasetDict, concatenate_datasets, load_dataset, load_from_disk
+
 from datasets.builder import DatasetGenerationError
 
 from .configs import DataArguments
@@ -45,6 +46,10 @@ def apply_chat_template(
     task: Literal["sft", "generation", "rm", "dpo"],
     auto_insert_empty_system_msg: bool = True,
 ):
+    def _strip_prefix(s, pattern):
+        # Use re.escape to escape any special characters in the pattern
+        return re.sub(f"^{re.escape(pattern)}", "", s)
+
     if task in ["sft", "generation"]:
         messages = example["messages"]
         # We add an empty system message if there is none
@@ -143,7 +148,7 @@ def get_datasets(
             Column names to keep in the dataset. Useful in the datamixer to avoid schema conflicts,
             and for cpt this should be (at least) the text column.
         shuffle (`bool`, *optional*, defaults to `True`):
-            Whether to shuffle the training and testing/validation data.
+            Whether to shuffle the training data.
 
     Returns
         [`DatasetDict`]: The dataset dictionary containing the loaded datasets.
@@ -155,7 +160,7 @@ def get_datasets(
         #     - 'dataset2': 0.3
         #     - 'dataset3': 0.2
         dataset_mixer = data_config.dataset_mixer
-    elif isinstance(data_config, dict):
+    elif type(data_config) is dict:
         # Structure of the input is:
         #     dataset_mixer = {
         #             "dataset1": 0.5,
@@ -197,7 +202,7 @@ def mix_datasets(
             Column names to keep in the dataset. Useful in the datamixer to avoid schema conflicts,
             and for cpt this should be (at least) the text column.
         shuffle (`bool`, *optional*, defaults to `True`):
-            Whether to shuffle the training and testing/validation data.
+            Whether to shuffle the training data.
     """
     splits = ["train", "test"] if splits is None else splits
     configs = [None] * len(dataset_mixer) if not configs else configs
