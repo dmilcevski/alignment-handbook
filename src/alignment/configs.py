@@ -253,11 +253,15 @@ class SFTConfig(transformers.TrainingArguments):
         metadata={"help": ("Whether to log and evaluate the first global_step or not.")},
     )
     optim: Optional[str] = field(default="adamw_torch")
-    
-   # dataset_num_proc: Optional[int] = field(
-   #     default=None,
-   #     metadata={"help": ("The number of workers to use to tokenize the data.")},
-   # )
+
+    dataset_num_proc: Optional[int] = field(
+        default=None,
+        metadata={"help": ("The number of workers to use to tokenize the data.")},
+    )
+    dataset_batch_size: Optional[int] = field(
+        default=1000,
+        metadata={"help": ("The number of workers to use to tokenize the data")},
+    )
 
 
 @dataclass
@@ -292,10 +296,6 @@ class DPOConfig(transformers.TrainingArguments):
     dataset_num_proc: Optional[int] = field(
         default=None,
         metadata={"help": ("The number of workers to use to tokenize the data.")},
-    )
-    dataset_batch_size: Optional[int] = field(
-        default=1000,
-        metadata={"help": ("The number of workers to use to tokenize the data")},
     )
 
 
