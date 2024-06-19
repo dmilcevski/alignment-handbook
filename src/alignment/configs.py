@@ -252,6 +252,16 @@ class SFTConfig(transformers.TrainingArguments):
         default=True,
         metadata={"help": ("Whether to log and evaluate the first global_step or not.")},
     )
+    eval_packing: Optional[bool] = field(
+        default=None,
+        metadata={"help": ("Whether to pack the eval dataset as well. Defaults to `packing` if `None` is passed.")}
+    )
+
+    packing: Optional[bool] = field(
+        default=False,
+        metadata={"help": ("The name of the text field of the dataset, in case this is passed by a user, the trainer will automatically create a `ConstantLengthDataset` based on the `dataset_text_field` argument. Defaults to None.")}
+    )
+
     optim: Optional[str] = field(default="adamw_torch")
 
     dataset_num_proc: Optional[int] = field(
@@ -260,12 +270,26 @@ class SFTConfig(transformers.TrainingArguments):
     )
     dataset_batch_size: Optional[int] = field(
         default=1000,
-        metadata={"help": ("The number of dataset batch size.")},
+        metadata={"help": ("The number of examples to tokenize per batch. If batch_size <= 0 or batch_size == None, tokenize the full dataset as a single batch. Defaults to 1000.")},
     )
 
     num_of_sequences: Optional[int] = field(
         default=1024,
-        metadata={"help": ("The number of sequences.")},
+        metadata={"help": ("The number of sequences to use for the `ConstantLengthDataset`. Defaults to `1024`.")},
+    )
+    chars_per_token: Optional[float] = field(
+        default=3.6,
+        metadata={"help": ("The number of characters per token to use for the `ConstantLengthDataset`. Defaults to `3.6`. You can check how this is computed in the stack-llama example: https://github.com/huggingface/trl/blob/08f550674c553c36c51d1027613c29f14f3676a5/examples/stack_llama/scripts/supervised_finetuning.py#L53.")},
+    )
+
+    model_init_kwargs: Optional[Dict] = field(
+        default=None,
+        metadata={"help": ("Dict of Optional kwargs to pass when instantiating the model from a string")},
+    )
+
+    neftune_noise_alpha: Optional[float] = field(
+        default=None,
+        metadata={"help": ("If not `None`, this will activate NEFTune noise embeddings. This has been proven to drastically improve model performances for instruction fine-tuning. Check out the original paper here: https://arxiv.org/abs/2310.05914 and the original code here: https://github.com/neelsjain/NEFTune")},
     )
 
 
