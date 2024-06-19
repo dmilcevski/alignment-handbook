@@ -284,6 +284,14 @@ class DPOConfig(transformers.TrainingArguments):
     optim: Optional[str] = field(default="rmsprop")
     remove_unused_columns: bool = field(default=False)
     loss_type: Optional[str] = field(default="sigmoid", metadata={"help": ("The loss type for DPO.")})
+    dataset_num_proc: Optional[int] = field(
+        default=None,
+        metadata={"help": ("The number of workers to use to tokenize the data.")},
+    )
+    dataset_batch_size: Optional[int] = field(
+        default=1000,
+        metadata={"help": ("The number of workers to use to tokenize the data.")},
+    )
 
 
 @dataclass
