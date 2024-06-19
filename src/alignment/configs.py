@@ -260,7 +260,12 @@ class SFTConfig(transformers.TrainingArguments):
     )
     dataset_batch_size: Optional[int] = field(
         default=1000,
-        metadata={"help": ("The number of workers to use to tokenize the data")},
+        metadata={"help": ("The number of dataset batch size.")},
+    )
+
+    num_of_sequences: Optional[int] = field(
+        default=1024,
+        metadata={"help": ("The number of sequences.")},
     )
 
 
