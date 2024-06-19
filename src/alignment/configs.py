@@ -295,7 +295,7 @@ class DPOConfig(transformers.TrainingArguments):
     )
     dataset_batch_size: Optional[int] = field(
         default=1000,
-        metadata={"help": ("The number of workers to use to tokenize the data.")},
+        metadata={"help": ("The number of workers to use to tokenize the data")},
     )
 
 
