@@ -128,7 +128,7 @@ class ModelArguments:
     )
     model_code_revision: str = field(default=None, metadata={"help": "The branch of the IFT model"})
     torch_dtype: Optional[str] = field(
-        default=None,
+        default="auto",
         metadata={
             "help": (
                 "Override the default `torch.dtype` and load the model under this dtype. If `auto` is passed, the "
