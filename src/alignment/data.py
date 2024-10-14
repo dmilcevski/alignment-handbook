@@ -46,9 +46,6 @@ def apply_chat_template(
     task: Literal["sft", "generation", "rm", "dpo"],
     auto_insert_empty_system_msg: bool = True,
 ):
-    def _strip_prefix(s, pattern):
-        # Use re.escape to escape any special characters in the pattern
-        return re.sub(f"^{re.escape(pattern)}", "", s)
 
     if task in ["sft", "generation"]:
         messages = example["messages"]
