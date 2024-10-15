@@ -1,0 +1,40 @@
+## Scheduler parameters ##
+
+#BSUB -J llama-3.1-8b-inst-vm-lora            # job name
+#BSUB -o logs/llama-3.1-8b-inst-lora.%J.stdout   # optional: have output written to specific file
+#BSUB -e logs/llama-3.1-8b-inst-lora.%J.stderr   # optional: have errors written to specific file
+#BSUB -q batch_h100               # optional: use highend nodes w/ Volta GPUs (default: Geforce GPUs)
+#BSUB -W 150:50                       # fill in desired wallclock time [hours,]minutes (hours are optional)
+#BSUB -n 16                          # min CPU cores,max CPU cores (max cores is optional)
+#BSUB -M 10240                      # fill in required amount of memory per CPU core(in Mbyte)
+#BSUB -R "span[hosts=1]"          # optional: run on single host (if using more than 1 CPU core)
+#BSUB -G rb_bd_dlp_rng-dl01_cr_AIM_employees
+#BSUB -gpu "num=8"
+
+# export TORCH_CUDA_ARCH_LIST="8.0;8.6+PTX;8.9;9.0;9.0+PTX"
+module load conda
+module load cuda/12.1.1
+module load cudnn/12.1.1_v8.9
+module load git/2.36.0-lfs
+module load proxy4server-access/2.0
+#module load git/2.36.0
+
+# ldconfig /usr/local/cuda-12.1/compat/
+
+nvidia-smi
+
+source /fs/applications/p4s-access/2.0/ActivateP4S.sh --activate
+
+cd /home/mdr2rng/alignment-handbook/
+
+conda activate handbook
+
+mkdir -p logs
+
+ACCELERATE_LOG_LEVEL=info \
+  TRANSFORMERS_VERBOSITY=info \
+  accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml \
+  scripts/run_sft.py recipes/llama-3.1-8b-instruct-vm/sft/config_qlora.yaml \
+    --load_in_4bit=false \
+    --main_process_port=29508  \
+    --output_dir=data/peft-llama-3.1-8b-sft-lora-vm-20241015-1
