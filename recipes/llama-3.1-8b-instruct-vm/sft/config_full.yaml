@@ -2,7 +2,7 @@
 model_name_or_path: meta-llama/Meta-Llama-3.1-8B-Instruct
 model_revision: main
 torch_dtype: bfloat16
-use_flash_attention_2: true
+attn_implementation: flash_attention_2
 
 # Data training arguments
 dataset_mixer:
@@ -15,12 +15,12 @@ preprocessing_num_workers: 12
 
 # SFT trainer config
 bf16: true
-dataset_kwargs:
-  add_special_tokens: false  # We already wrap <bos> and <eos> in the chat template
-  append_concat_token: false # No need to add <eos> across samples
+#dataset_kwargs:
+#  add_special_tokens: false  # We already wrap <bos> and <eos> in the chat template
+#  append_concat_token: false # No need to add <eos> across samples
 do_eval: true
 eval_strategy: epoch
-gradient_accumulation_steps: 4
+gradient_accumulation_steps: 1
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
@@ -43,7 +43,7 @@ remove_unused_columns: true
 report_to:
 - tensorboard
 - wandb
-save_strategy: "no"
-save_total_limit: null
+save_strategy: "steps"
+save_total_limit: 100
 seed: 42
 warmup_ratio: 0.1

@@ -33,7 +33,7 @@ preprocessing_num_workers: 12
 bf16: true
 do_eval: true
 eval_strategy: epoch
-gradient_accumulation_steps: 2
+gradient_accumulation_steps: 1
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
@@ -49,7 +49,7 @@ max_steps: -1
 num_train_epochs: 1
 output_dir: data/llama-3.1-8b-instruct-vm-qloara-1
 overwrite_output_dir: true
-per_device_eval_batch_size: 8
+per_device_eval_batch_size: 4
 per_device_train_batch_size: 4
 push_to_hub: false
 report_to:
